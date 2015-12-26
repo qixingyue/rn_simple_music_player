@@ -1,0 +1,11 @@
+{
+  "name": "rn_simple_music_player",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start"
+  },
+  "dependencies": {
+    "react-native": "^0.17.0"
+  }
+}
