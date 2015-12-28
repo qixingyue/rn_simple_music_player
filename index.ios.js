@@ -26,7 +26,7 @@ var TouchableBounce = require('TouchableBounce');
 var musicplayer = React.createClass({
 
 	getInitialState:function() {
-		this.AudioPlayer = require("react-native-audio").AudioPlayer;
+		this.AudioPlayer = require("./Audio.ios").AudioPlayer;
 		return {
 			currentState:"loading"
 			,keyword:""
@@ -74,7 +74,7 @@ var musicplayer = React.createClass({
 
 	,componentDidMount:function(){
 		this._reloadSong();	
-		this.AudioPlayer.setFinishedSubscription(()=>{ console.log("finished .... ");this._reloadSong();});
+		this.AudioPlayer.setFinishedSubscription((data)=>{ console.log("finished .... ");this._reloadSong();});
 	}
 
 	,_reloadSong:function(){
@@ -109,36 +109,6 @@ var musicplayer = React.createClass({
 	}
  
 });
-
-//		if(this.state.loaded) {
-//    	return (
-//      	<view style={styles.container}>
-//      	  <text>{this.state.entry.keyword} loaded over and begin to play,go back it will exit ! </text>
-//      	</view>
-//    	);
-//		} else {
-//			return (
-//
-//      <view style={styles.container}>
-//					<activityindicatorios color="red" size="large" animating={true}>
-//					</activityindicatorios>
-//					<text style={styles.littlemargin}>loading...</text>
-//					<text style={styles.littlemargin}>{this.state.entry.keyword}</text>
-//					<text style={styles.littlemargin}>{this.state.entry.musicurl}</text>
-//				</view>
-//			);
-//		}	
-//  }
-//
-//	componentdidmount(){
-//
-//			}
-//
-//	componentwillunmount(){
-//		audioplayer.stop();	
-//	}
-// 
-//}
 
 var styles = StyleSheet.create({
   container: {
