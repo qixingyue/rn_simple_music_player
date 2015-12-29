@@ -71,6 +71,9 @@ var AudioPlayer = {
       callback(duration);
     })
   },
+	setVolume: function(v){
+		AudioPlayerManager.setVolume(v);			
+	}
 };
 
 var AudioRecorder = {

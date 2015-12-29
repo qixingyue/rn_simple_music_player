@@ -16,7 +16,6 @@ NSString *const AudioPlayerEventProgress = @"playerProgress";
 NSString *const AudioPlayerEventFinished = @"playerFinished";
 
 @implementation AudioPlayerManager {
-
   AVAudioPlayer *_audioPlayer;
 
   NSTimeInterval _currentTime;
@@ -119,6 +118,11 @@ RCT_EXPORT_METHOD(playWithUrlCallBack: (NSURL *) url  loadingCallback:(RCTRespon
     [self startProgressTimer];
     [_audioPlayer play];
   }
+}
+
+
+RCT_EXPORT_METHOD(setVolume:(float) v) {
+  _audioPlayer.volume =  v ;
 }
 
 RCT_EXPORT_METHOD(playWithUrl:(NSURL *) url)

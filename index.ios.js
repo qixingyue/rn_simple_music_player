@@ -10,15 +10,14 @@ var {
   View,
 	ActivityIndicatorIOS,
 	TextInput,
+	Image,
+	SliderIOS,
 } = React;
 
 var searchKeywords = [
-	"hello"
-	,"我的未来不是梦"
-	,"想你的365天"
-	,"羽泉 奔跑"
-	,"always online"
-	,"my heart will go on"
+	"Hello"
+	,"See you again"
+	,"A new day has come"
 ];
 
 var TouchableBounce = require('TouchableBounce');
@@ -30,6 +29,9 @@ var musicplayer = React.createClass({
 		return {
 			currentState:"loading"
 			,keyword:""
+			,imageUrl:""
+			,playOrPause:"Pause"
+			,volume:0.5
 		}	
 	}	
  
@@ -39,7 +41,7 @@ var musicplayer = React.createClass({
 				<View style={styles.container}>
 					<ActivityIndicatorIOS color="red" size="large" animating={true}>
 					</ActivityIndicatorIOS>
-					<Text style={styles.littlemargin}>loading...</Text>
+					<Text style={styles.littleMargin}>loading...</Text>
 				</View>
 				);
 			} else if(this.state.currentState == "searching"){
@@ -47,8 +49,8 @@ var musicplayer = React.createClass({
 				<View style={styles.container}>
 					<ActivityIndicatorIOS color="red" size="large" animating={true}>
 					</ActivityIndicatorIOS>
-					<Text style={styles.littlemargin}>searching...</Text>
-					<Text style={styles.littlemargin}>{this.state.keyword}</Text>
+					<Text style={styles.littleMargin}>searching...</Text>
+					<Text style={styles.littleMargin}>{this.state.keyword}</Text>
 				</View>
 				);
 			} else if(this.state.currentState == "loadingSound") {
@@ -56,17 +58,35 @@ var musicplayer = React.createClass({
 				<View style={styles.container}>
 					<ActivityIndicatorIOS color="red" size="large" animating={true}>
 					</ActivityIndicatorIOS>
-					<Text style={styles.littlemargin}>Loading sound ...</Text>
-					<Text style={styles.littlemargin}>{this.state.keyword}</Text>
+					<Text style={styles.littleMargin}>Loading sound ...</Text>
+					<Text style={styles.littleMargin}>{this.state.keyword}</Text>
 				</View>
 				);
 			} else if(this.state.currentState == "playing") {
 				return(	
 				<View style={styles.container}>
-					<Text style={styles.littlemargin}>{this.state.keyword} PLAYING ... </Text>
+					<View style={styles.imageContainer}>
+					<Image source={{uri:this.state.imageUrl}} style={{width:300,height:300}}></Image>
+					</View>
+					<Text style={styles.littleMargin}>{this.state.keyword}  </Text>
+
 					<TouchableBounce style={[styles.reloadSong,styles.littleMargin]} onPress={this._reloadSong}>
         		<Text style={styles.title}>Change Another Song</Text>
 					</TouchableBounce>
+
+					<TouchableBounce style={[styles.reloadSong,styles.littleMargin]} onPress={this._playOrPause}>
+        		<Text style={styles.title}>{this.state.playOrPause}</Text>
+					</TouchableBounce>
+
+   			 <View>
+   			     <Text style={styles.littleMargin} >
+   			       Volume:{this.state.volume}
+   			     </Text>
+   			     <SliderIOS
+						 	 value = {0.5}
+   			       onValueChange={this._configVolume} />
+   			   </View>
+
 				</View>
 				);
 			}
@@ -78,6 +98,7 @@ var musicplayer = React.createClass({
 	}
 
 	,_reloadSong:function(){
+		this.AudioPlayer.stop();
 		var _self = this;
 		var i = parseInt(Math.random() * searchKeywords.length );
 		var keyword = searchKeywords[i];
@@ -93,6 +114,7 @@ var musicplayer = React.createClass({
 				this.AudioPlayer.playWithUrlCallBack(musicUrl,()=>{
 					this.setState({
 						currentState:"playing"
+						,imageUrl:data[0].album.picUrl
 					});
 				},()=>{
 					this.setState({
@@ -102,6 +124,27 @@ var musicplayer = React.createClass({
 			};
 		});
 
+	}
+
+	,_playOrPause(){
+		if(this.state.playOrPause == "Play"){
+			this.AudioPlayer.unpause();	
+			this.setState({
+				playOrPause:"Pause"	
+			});
+		} else {
+			this.AudioPlayer.pause();	
+			this.setState({
+				playOrPause:"Play"	
+			});
+		}
+	}
+
+	,_configVolume(value){
+		this.setState({
+			volume:value	
+		});	
+		this.AudioPlayer.setVolume(value);
 	}
 
 	,componentWillUnmount:function(){
@@ -114,7 +157,6 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
-    marginTop: 65,
     alignItems: 'stretch',
   },
 	reloadSong: {
@@ -123,7 +165,7 @@ var styles = StyleSheet.create({
 		borderRadius: 5,
 	},
 	littleMargin:{
-		marginTop:10
+		margin:10
 	},
 });
 
@@ -135,6 +177,5 @@ function searchMusic(info,dataHandler){
 		dataHandler && dataHandler(responseData.result.songs);
 	});
 }
-
 
 AppRegistry.registerComponent('rn_simple_music_player', () => musicplayer);
