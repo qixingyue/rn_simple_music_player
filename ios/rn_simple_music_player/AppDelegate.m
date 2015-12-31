@@ -8,8 +8,9 @@
  */
 
 #import "AppDelegate.h"
-
 #import "RCTRootView.h"
+#import <AVFoundation/AVFoundation.h>
+
 
 @implementation AppDelegate
 
@@ -18,9 +19,9 @@
   NSURL *jsCodeLocation;
 
 
-  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
+//  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
 
-// jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+ jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"rn_simple_music_player"
@@ -32,7 +33,20 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
+  
+  
+  NSError *setCategoryErr = nil;
+  NSError *activationErr  = nil;
+  [[AVAudioSession sharedInstance]
+   setCategory: AVAudioSessionCategoryPlayback
+   error: &setCategoryErr];
+  [[AVAudioSession sharedInstance]
+   setActive: YES
+   error: &activationErr];
+  
   return YES;
 }
+
+
 
 @end
