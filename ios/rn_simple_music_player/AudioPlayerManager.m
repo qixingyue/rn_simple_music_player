@@ -29,6 +29,14 @@ NSString *const AudioPlayerEventFinished = @"playerFinished";
 
 RCT_EXPORT_MODULE();
 
+- (NSString *) applicationDocumentsDirectory
+{
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+  return basePath;
+}
+
+
 - (void)sendProgressUpdate {
   if (_audioPlayer && _audioPlayer.playing) {
     _currentTime = _audioPlayer.currentTime;
@@ -85,9 +93,11 @@ RCT_EXPORT_METHOD(play:(NSString *)path)
 
   _audioFileURL = [NSURL fileURLWithPath:audioFilePath];
 
-  _audioPlayer = [[AVAudioPlayer alloc]
-    initWithContentsOfURL:_audioFileURL
-    error:&error];
+  if(NULL == _audioPlayer ) {
+    _audioPlayer = [AVAudioPlayer alloc];
+  }
+  
+  _audioPlayer = [ _audioPlayer initWithContentsOfURL:_audioFileURL error:&error];
   _audioPlayer.delegate = self;
   
   if (error) {
@@ -107,8 +117,27 @@ RCT_EXPORT_METHOD(playWithUrlCallBack: (NSURL *) url  loadingCallback:(RCTRespon
 {
   NSError *error;
   [self.bridge.eventDispatcher sendAppEventWithName:@"urlLoadBegin" body:@{@"name":@"urlLoadBegin"}];
+  
+  
+  NSLog(@"Loading Soudn Data begin .....");
+  
   NSData* data = [NSData dataWithContentsOfURL: url];
-  _audioPlayer = [[AVAudioPlayer alloc] initWithData:data  error:&error];
+  
+  
+  [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+  [[AVAudioSession sharedInstance] setActive: YES error: nil];
+  [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+
+  NSLog(@"Loading Soudn Data end .....");
+  
+  if(NULL == _audioPlayer ) {
+    _audioPlayer = [AVAudioPlayer alloc];
+  }
+
+  _audioPlayer = [ _audioPlayer initWithData:data  error:&error];
+  
+  NSLog(@"init data with player end  .....");
+  
   _audioPlayer.delegate = self;
   if (error) {
     [self stopProgressTimer];
@@ -116,7 +145,10 @@ RCT_EXPORT_METHOD(playWithUrlCallBack: (NSURL *) url  loadingCallback:(RCTRespon
   } else {
     loadingCallback(@[]);
     [self startProgressTimer];
+    
+    NSLog(@"Audio player play begin  .....");
     [_audioPlayer play];
+    NSLog(@"Audio player play end  .....");
   }
 }
 
@@ -177,5 +209,45 @@ RCT_EXPORT_METHOD(getDuration:(RCTResponseSenderBlock)callback)
   NSTimeInterval duration = _audioPlayer.duration;
   callback(@[[NSNull null], [NSNumber numberWithDouble:duration]]);
 }
+
+
+
+RCT_EXPORT_METHOD(playLocalFile: (NSString *)path ) {
+  
+  NSError *error;
+  NSString *musicPath = [[self applicationDocumentsDirectory] stringByAppendingString:@"/music/"];
+  NSString *audioFilePath = [musicPath stringByAppendingPathComponent:path];
+  NSData* data = [NSData dataWithContentsOfFile: audioFilePath];
+  _audioPlayer = [[AVAudioPlayer alloc] initWithData:data  error:&error];
+  _audioPlayer.delegate = self;
+  if (error) {
+    [self stopProgressTimer];
+    NSLog(@"audio playback loading error: %@", [error localizedDescription]);
+  } else {
+    [self startProgressTimer];
+    [_audioPlayer play];
+  }
+}
+
+
+RCT_EXPORT_METHOD(downloadMusicFile: (NSString *)path : (NSURL *) downloadUrl : (RCTResponseSenderBlock) callback) {
+
+    NSString *musicPath = [[self applicationDocumentsDirectory] stringByAppendingString:@"/music/"];
+    NSString *audioFilePath = [musicPath stringByAppendingPathComponent:path];
+    NSData* data = [NSData dataWithContentsOfURL: downloadUrl];
+
+    NSFileManager *fm = [NSFileManager defaultManager];
+
+    [fm createDirectoryAtPath:musicPath withIntermediateDirectories:YES attributes:nil error:nil];
+  
+    if([data writeToFile:audioFilePath atomically:YES]){
+      callback(@[]);
+    } else {
+     callback(@[@"Download File Error .... "]);
+    }
+  
+}
+
+
 
 @end
