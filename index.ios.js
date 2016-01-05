@@ -15,9 +15,12 @@ var {
 } = React;
 
 var searchKeywords = [
-	"Hello"
+	"A new day has come"
+	,"Hello"
 	,"See you again"
-	,"A new day has come"
+	,"狂流 羽泉"
+	,"拥抱 五月天"
+	,"I will return"
 ];
 
 var TouchableBounce = require('TouchableBounce');
@@ -111,12 +114,16 @@ var musicplayer = React.createClass({
 				console.log("not found : " + keyword);
 			} else {
 				var musicUrl = data[0].audio;
+				console.log("Search End .... ");
+				console.log(musicUrl);
 				this.AudioPlayer.playWithUrlCallBack(musicUrl,()=>{
+					console.log("playing ... ");
 					this.setState({
 						currentState:"playing"
 						,imageUrl:data[0].album.picUrl
 					});
 				},()=>{
+					console.log("loading Song ... ");
 					this.setState({
 						currentState:"loadingSound"	
 					});	
@@ -171,9 +178,11 @@ var styles = StyleSheet.create({
 
 function searchMusic(info,dataHandler){
 	var url = "http://s.music.163.com/search/get/?type=1&limit=1&jsonpCallback=callback&s=" + info;
+	console.log(url);
 	fetch(url)
 	.then((response) => response.json())
 	.then((responseData) => {
+		console.log("Search End .... ");
 		dataHandler && dataHandler(responseData.result.songs);
 	});
 }

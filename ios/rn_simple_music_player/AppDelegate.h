@@ -13,4 +13,8 @@
 
 @property (nonatomic, strong) UIWindow *window;
 
+- (NSString*) applicationDocumentsDirectory ;
+
+- (void) applicationRefreshView : (NSString*) url : (NSString*) moduleName;
+
 @end

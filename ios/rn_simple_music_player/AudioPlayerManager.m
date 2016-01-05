@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Joshua Sierles. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "AudioPlayerManager.h"
 #import "RCTConvert.h"
 #import "RCTBridge.h"
@@ -84,6 +85,7 @@ RCT_EXPORT_MODULE();
     }];
 }
 
+
 RCT_EXPORT_METHOD(play:(NSString *)path)
 {
   NSError *error;
@@ -111,10 +113,11 @@ RCT_EXPORT_METHOD(play:(NSString *)path)
 }
 
 
-//RCT_EXTERN_METHOD(doSomething:(NSString *)string withFoo:(NSInteger)a bar:(NSInteger)b)
-
 RCT_EXPORT_METHOD(playWithUrlCallBack: (NSURL *) url  loadingCallback:(RCTResponseSenderBlock)loadingCallback)
 {
+
+ 
+  
   NSError *error;
   [self.bridge.eventDispatcher sendAppEventWithName:@"urlLoadBegin" body:@{@"name":@"urlLoadBegin"}];
   

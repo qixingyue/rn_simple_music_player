@@ -12,6 +12,9 @@
 #import "RCTEventDispatcher.h"
 #import <AVFoundation/AVFoundation.h>
 
+
+
+
 NSString *const AudioRecorderEventProgress = @"recordingProgress";
 NSString *const AudioRecorderEventFinished = @"recordingFinished";
 
@@ -26,6 +29,7 @@ NSString *const AudioRecorderEventFinished = @"recordingFinished";
   NSDate *_prevProgressUpdateTime;
   NSURL *_audioFileURL;
   AVAudioSession *_recordSession;
+  
 }
 
 @synthesize bridge = _bridge;
@@ -33,6 +37,7 @@ NSString *const AudioRecorderEventFinished = @"recordingFinished";
 RCT_EXPORT_MODULE();
 
 - (void)sendProgressUpdate {
+
   if (_audioRecorder && _audioRecorder.recording) {
     _currentTime = _audioRecorder.currentTime;
   } else if (_audioPlayer && _audioPlayer.playing) {

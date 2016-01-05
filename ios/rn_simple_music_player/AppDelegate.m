@@ -11,18 +11,23 @@
 #import "RCTRootView.h"
 #import <AVFoundation/AVFoundation.h>
 
-
 @implementation AppDelegate
+
+- (NSString *) applicationDocumentsDirectory
+{
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+  return basePath;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+ 
   NSURL *jsCodeLocation;
 
-
-//  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
-
- jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-
+  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/loading.ios.bundle?platform=ios&dev=true"];
+  
+  
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"rn_simple_music_player"
                                                initialProperties:nil
@@ -42,6 +47,24 @@
   
   return YES;
 }
+
+- (void)applicationRefreshView:(NSString *) name  : (NSString *) moduleName{
+  
+  NSString *rootPath = [self applicationDocumentsDirectory];
+  NSString *jsPath = [rootPath stringByAppendingString:name];
+  NSURL *jsCodeLocation ;
+
+  jsCodeLocation = [NSURL fileURLWithPath:jsPath];
+
+  
+  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                      moduleName:moduleName
+                                               initialProperties:nil
+                                                   launchOptions:nil];
+  
+  [[self.window rootViewController]setView:rootView];
+}
+
 
 
 
