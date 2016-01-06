@@ -55,13 +55,12 @@ RCT_EXPORT_MODULE();
 //  [self refreshApplicationViewWithUrl:url];
 - (void) refreshApplicationViewWithUrl : (NSString*) url : (NSString*) moduleName {
   
-  NSString *savefileName = @"/main.jsbundle";
+  NSString *savefileName = [moduleName stringByAppendingString:@".jsbundle"];
   
   AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
   
   NSString *documentPath = [appDelegate applicationDocumentsDirectory];
-  NSLog(@"%@",url);
-  
+
   //下载文件，从URL下载
   NSURL *urlLocation = [NSURL URLWithString:url];
   NSData *data = [NSData dataWithContentsOfURL:urlLocation];
@@ -69,12 +68,19 @@ RCT_EXPORT_MODULE();
   
   [data writeToFile:path atomically:YES];
   
-  NSString *rootPath = [appDelegate applicationDocumentsDirectory];
-  NSString *jsPath = [rootPath stringByAppendingString:savefileName];
-  NSURL *jsCodeLocation ;
-  jsCodeLocation = [NSURL fileURLWithPath:jsPath];
-  [self mainUIShowNSURL:jsCodeLocation :moduleName ];
+  [self showLocalModuleApp:moduleName];
 }
+
+- (void) showLocalModuleApp : (NSString*) moduleName {
+    NSString *savefileName = [moduleName stringByAppendingString:@".jsbundle"];
+    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    NSString *rootPath = [appDelegate applicationDocumentsDirectory];
+    NSString *jsPath = [rootPath stringByAppendingString:savefileName];
+    NSURL *jsCodeLocation ;
+    jsCodeLocation = [NSURL fileURLWithPath:jsPath];
+    [self mainUIShowNSURL:jsCodeLocation :moduleName ];
+}
+
 
 RCT_EXPORT_METHOD(loadFromUrl : (NSString*) url : (NSString*) moduleName)
 {
