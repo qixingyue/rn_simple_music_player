@@ -92,6 +92,9 @@ RCT_EXPORT_METHOD(backToBase){
   [self backToLoadingPanel];
 }
 
+RCT_EXPORT_METHOD(loadFromLocal : (NSString*) moduleName) {
+  [self showLocalModuleApp:moduleName];
+}
 
 RCT_EXPORT_METHOD(simpleTest)
 {

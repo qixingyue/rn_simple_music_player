@@ -1246,8 +1246,13 @@ return {};},
 
 render:function(){
 return (
+React.createElement(View,null,
 React.createElement(TouchableBounce,{style:styles.loadButton,onPress:this._loadUrl},
-React.createElement(Text,{style:styles.buttonText},this.showText)));},
+React.createElement(Text,{style:styles.buttonText},this.showText)),
+
+React.createElement(TouchableBounce,{style:styles.loadButton,onPress:this._loadLocal},
+React.createElement(Text,{style:styles.buttonText},'LOCAL'))));},
+
 
 
 
@@ -1255,7 +1260,10 @@ _loadUrl:function(){
 if(this.moduleName==null){
 this.moduleName="rn_simple_music_player";}
 
-rctUpdateObj.loadFromUrl(this.url,this.moduleName);}});
+rctUpdateObj.loadFromUrl(this.url,this.moduleName);},
+
+_loadLocal:function(){
+rctUpdateObj.loadFromLocal(this.moduleName);}});
 
 
 

@@ -25,9 +25,14 @@ var LoadButton = React.createClass({
 		}
 		,render:function(){
 			return (
-				<TouchableBounce style={styles.loadButton} onPress={this._loadUrl}>
-				<Text style={styles.buttonText}>{this.showText}</Text>
-				</TouchableBounce>
+				<View>
+					<TouchableBounce style={styles.loadButton} onPress={this._loadUrl}>
+					<Text style={styles.buttonText}>{this.showText}</Text>
+					</TouchableBounce>
+					<TouchableBounce style={styles.loadButton} onPress={this._loadLocal}>
+					<Text style={styles.buttonText}>LOCAL</Text>
+					</TouchableBounce>
+				</View>
 			);	
 		}
 		,_loadUrl:function(){
@@ -35,6 +40,9 @@ var LoadButton = React.createClass({
 				this.moduleName = "rn_simple_music_player";
 			} 
 			rctUpdateObj.loadFromUrl(this.url,this.moduleName);
+		}
+		,_loadLocal:function(){
+			rctUpdateObj.loadFromLocal(this.moduleName);
 		}
 });
 
