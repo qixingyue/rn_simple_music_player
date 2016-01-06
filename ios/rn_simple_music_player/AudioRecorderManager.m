@@ -13,8 +13,6 @@
 #import <AVFoundation/AVFoundation.h>
 
 
-
-
 NSString *const AudioRecorderEventProgress = @"recordingProgress";
 NSString *const AudioRecorderEventFinished = @"recordingFinished";
 

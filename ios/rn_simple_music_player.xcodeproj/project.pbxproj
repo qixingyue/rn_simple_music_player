@@ -22,6 +22,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		892B0F3B1C3BA1F90071E53D /* RctUpdate.m in Sources */ = {isa = PBXBuildFile; fileRef = 892B0F3A1C3BA1F90071E53D /* RctUpdate.m */; };
+		892B0F3E1C3BCC320071E53D /* loading.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 892B0F3D1C3BCC320071E53D /* loading.jsbundle */; };
 		896EB7A11C2E3C080067D555 /* AudioPlayerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 896EB79E1C2E3C080067D555 /* AudioPlayerManager.m */; };
 		896EB7A21C2E3C080067D555 /* AudioRecorderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 896EB7A01C2E3C080067D555 /* AudioRecorderManager.m */; };
 /* End PBXBuildFile section */
@@ -107,7 +108,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -129,6 +129,7 @@
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		892B0F391C3BA1F90071E53D /* RctUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RctUpdate.h; path = rn_simple_music_player/RctUpdate.h; sourceTree = "<group>"; };
 		892B0F3A1C3BA1F90071E53D /* RctUpdate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RctUpdate.m; path = rn_simple_music_player/RctUpdate.m; sourceTree = "<group>"; };
+		892B0F3D1C3BCC320071E53D /* loading.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = loading.jsbundle; path = rn_simple_music_player/loading.jsbundle; sourceTree = "<group>"; };
 		896EB79D1C2E3C080067D555 /* AudioPlayerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioPlayerManager.h; path = rn_simple_music_player/AudioPlayerManager.h; sourceTree = "<group>"; };
 		896EB79E1C2E3C080067D555 /* AudioPlayerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioPlayerManager.m; path = rn_simple_music_player/AudioPlayerManager.m; sourceTree = "<group>"; };
 		896EB79F1C2E3C080067D555 /* AudioRecorderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioRecorderManager.h; path = rn_simple_music_player/AudioRecorderManager.h; sourceTree = "<group>"; };
@@ -238,11 +239,11 @@
 		13B07FAE1A68108700A75B9A /* rn_simple_music_player */ = {
 			isa = PBXGroup;
 			children = (
+				892B0F3D1C3BCC320071E53D /* loading.jsbundle */,
 				896EB79D1C2E3C080067D555 /* AudioPlayerManager.h */,
 				896EB79E1C2E3C080067D555 /* AudioPlayerManager.m */,
 				896EB79F1C2E3C080067D555 /* AudioRecorderManager.h */,
 				896EB7A01C2E3C080067D555 /* AudioRecorderManager.m */,
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -517,6 +518,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				892B0F3E1C3BCC320071E53D /* loading.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);

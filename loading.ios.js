@@ -9,6 +9,7 @@ var {
 	StyleSheet,
 	View,
 	NativeModules,
+	ListView,
 } = React;
 
 var rctUpdateObj = NativeModules.RctUpdate;
@@ -17,6 +18,7 @@ var TouchableBounce = require("TouchableBounce");
 var LoadButton = React.createClass({
 		getInitialState:function(){
 				this.url = this.props.url;
+				this.moduleName = this.props.moduleName;
 				return {};
 		}
 		,render:function(){
@@ -27,34 +29,47 @@ var LoadButton = React.createClass({
 			);	
 		}
 		,_loadUrl:function(){
-			if(this.url != "appin") {
-				this.url = "http://" + this.url + ":8081/index.ios.bundle";
-			}
-			rctUpdateObj.loadFromUrl(this.url);
+			this.url = "http://" + this.url + ":8081/index.ios.bundle";
+			if(this.moduleName == null) {
+				this.moduleName = "rn_simple_music_player";
+			} 
+			rctUpdateObj.loadFromUrl(this.url,this.moduleName);
 		}
 });
 
 var musicplayer = React.createClass({
 
 	getInitialState:function() {
+		var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 != r2});
 		return {
 			currentState:"loading"
+			,dataSource: ds.cloneWithRows([]),
 		}	
 	}	
  
   ,render:function() {
 		return(	
 		<View style={styles.container}>
-			<LoadButton url="localhost"></LoadButton>
-			<LoadButton url="10.217.39.208"></LoadButton>
-			<LoadButton url="192.168.1.102"></LoadButton>
-			<LoadButton url="appin"></LoadButton>
+			<ListView 
+				dataSource = {this.state.dataSource}	
+				renderRow = {(rowData) => <LoadButton url={rowData.host} moduleName={rowData.moduleName}></LoadButton>}
+			>
+			</ListView>
 		</View>
 		);
   }
 
 	,componentDidMount:function(){
-		rctUpdateObj.simpleTest();
+
+		fetch("http://anyapi.sinaapp.com/rnhost.json")
+		.then((response) => response.json())
+		.then((hostJson) => {
+			this.setState({
+				dataSource:this.state.dataSource.cloneWithRows(hostJson)
+			});
+		})
+		.done();
+
 		return ;
 	}
 
@@ -69,7 +84,6 @@ var styles = StyleSheet.create({
 		backgroundColor:'#eee'
   },
 	loadButton: {
-		//backgroundColor:"#887761",
 		padding: 20,
 		borderRadius: 8,
 		borderWidth:2,

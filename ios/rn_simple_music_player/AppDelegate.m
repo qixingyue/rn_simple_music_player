@@ -23,10 +23,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
  
+
   NSURL *jsCodeLocation;
 
-  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/loading.ios.bundle?platform=ios&dev=true"];
-  
+ jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/loading.ios.bundle?platform=ios&dev=true"];
+//  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"loading" withExtension:@"jsbundle"];
+
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"rn_simple_music_player"
@@ -39,30 +41,7 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
-  
-  NSError *setCategoryErr = nil;
-  NSError *activationErr  = nil;
-  [[AVAudioSession sharedInstance] setCategory: AVAudioSessionCategoryPlayback error: &setCategoryErr];
-  [[AVAudioSession sharedInstance] setActive: YES error: &activationErr];
-  
   return YES;
-}
-
-- (void)applicationRefreshView:(NSString *) name  : (NSString *) moduleName{
-  
-  NSString *rootPath = [self applicationDocumentsDirectory];
-  NSString *jsPath = [rootPath stringByAppendingString:name];
-  NSURL *jsCodeLocation ;
-
-  jsCodeLocation = [NSURL fileURLWithPath:jsPath];
-
-  
-  RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
-                                                      moduleName:moduleName
-                                               initialProperties:nil
-                                                   launchOptions:nil];
-  
-  [[self.window rootViewController]setView:rootView];
 }
 
 

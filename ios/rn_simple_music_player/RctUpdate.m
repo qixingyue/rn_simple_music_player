@@ -7,6 +7,7 @@
 //
 
 #import "RctUpdate.h"
+#import <RCTRootView.h>
 
 @implementation RctUpdate {
   NSString *jsbundlePath;
@@ -20,10 +21,9 @@ RCT_EXPORT_MODULE();
 // 调用demo
 // NSString *url = @"http://localhost:8081/index.ios.bundle";
 //  [self refreshApplicationViewWithUrl:url];
-- (void) refreshApplicationViewWithUrl : (NSString*) url{
+- (void) refreshApplicationViewWithUrl : (NSString*) url : (NSString*) moduleName {
   
   NSString *savefileName = @"/main.jsbundle";
-  NSString *moduleName = @"rn_simple_music_player";
   
   AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
   
@@ -37,19 +37,31 @@ RCT_EXPORT_MODULE();
   
   [data writeToFile:path atomically:YES];
   
-  NSLog(@"Donload Path : %@",path);
   
   //通知主线程UI更新
-  
   dispatch_sync(dispatch_get_main_queue(), ^{
-    [appDelegate applicationRefreshView:savefileName : moduleName];
+    
+    NSString *rootPath = [appDelegate applicationDocumentsDirectory];
+    NSString *jsPath = [rootPath stringByAppendingString:savefileName];
+    NSURL *jsCodeLocation ;
+    
+    jsCodeLocation = [NSURL fileURLWithPath:jsPath];
+    
+    
+    RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
+                                                        moduleName:moduleName
+                                                 initialProperties:nil
+                                                     launchOptions:nil];
+    
+    [[appDelegate.window rootViewController]setView:rootView];
+    
   });
   
 }
 
-RCT_EXPORT_METHOD(loadFromUrl : (NSString*) url)
+RCT_EXPORT_METHOD(loadFromUrl : (NSString*) url : (NSString*) moduleName)
 {
-  [self refreshApplicationViewWithUrl:url];
+  [self refreshApplicationViewWithUrl:url:moduleName];
 }
 
 
