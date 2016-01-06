@@ -19,17 +19,18 @@ var LoadButton = React.createClass({
 		getInitialState:function(){
 				this.url = this.props.url;
 				this.moduleName = this.props.moduleName;
+				var epos = this.url.indexOf("/",10);
+				this.showText = this.url.substring(7,epos);
 				return {};
 		}
 		,render:function(){
 			return (
 				<TouchableBounce style={styles.loadButton} onPress={this._loadUrl}>
-				<Text style={styles.buttonText}>{this.url}</Text>
+				<Text style={styles.buttonText}>{this.showText}</Text>
 				</TouchableBounce>
 			);	
 		}
 		,_loadUrl:function(){
-			this.url = "http://" + this.url + ":8081/index.ios.bundle";
 			if(this.moduleName == null) {
 				this.moduleName = "rn_simple_music_player";
 			} 
@@ -52,7 +53,7 @@ var musicplayer = React.createClass({
 		<View style={styles.container}>
 			<ListView 
 				dataSource = {this.state.dataSource}	
-				renderRow = {(rowData) => <LoadButton url={rowData.host} moduleName={rowData.moduleName}></LoadButton>}
+				renderRow = {(rowData) => <LoadButton url={rowData.url} moduleName={rowData.moduleName}></LoadButton>}
 			>
 			</ListView>
 		</View>
@@ -61,7 +62,7 @@ var musicplayer = React.createClass({
 
 	,componentDidMount:function(){
 
-		fetch("http://anyapi.sinaapp.com/rnhost.json")
+		fetch("http://anyapi.sinaapp.com/rnapp/app.php?password=de7e95132907c131911a952240a246e2")
 		.then((response) => response.json())
 		.then((hostJson) => {
 			this.setState({

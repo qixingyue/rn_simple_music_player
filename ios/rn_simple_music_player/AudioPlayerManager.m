@@ -18,7 +18,7 @@ NSString *const AudioPlayerEventFinished = @"playerFinished";
 
 @implementation AudioPlayerManager {
   AVAudioPlayer *_audioPlayer;
-
+  
   NSTimeInterval _currentTime;
   id _progressUpdateTimer;
   int _progressUpdateInterval;
@@ -29,14 +29,6 @@ NSString *const AudioPlayerEventFinished = @"playerFinished";
 @synthesize bridge = _bridge;
 
 RCT_EXPORT_MODULE();
-
-- (NSString *) applicationDocumentsDirectory
-{
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-  return basePath;
-}
-
 
 - (void)sendProgressUpdate {
   if (_audioPlayer && _audioPlayer.playing) {
@@ -122,24 +114,18 @@ RCT_EXPORT_METHOD(playWithUrlCallBack: (NSURL *) url  loadingCallback:(RCTRespon
   [self.bridge.eventDispatcher sendAppEventWithName:@"urlLoadBegin" body:@{@"name":@"urlLoadBegin"}];
   
   
-  NSLog(@"Loading Soudn Data begin .....");
-  
   NSData* data = [NSData dataWithContentsOfURL: url];
   
   
   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
   [[AVAudioSession sharedInstance] setActive: YES error: nil];
   [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-
-  NSLog(@"Loading Soudn Data end .....");
   
   if(NULL == _audioPlayer ) {
     _audioPlayer = [AVAudioPlayer alloc];
   }
 
   _audioPlayer = [ _audioPlayer initWithData:data  error:&error];
-  
-  NSLog(@"init data with player end  .....");
   
   _audioPlayer.delegate = self;
   if (error) {
@@ -148,10 +134,7 @@ RCT_EXPORT_METHOD(playWithUrlCallBack: (NSURL *) url  loadingCallback:(RCTRespon
   } else {
     loadingCallback(@[]);
     [self startProgressTimer];
-    
-    NSLog(@"Audio player play begin  .....");
     [_audioPlayer play];
-    NSLog(@"Audio player play end  .....");
   }
 }
 
@@ -217,8 +200,9 @@ RCT_EXPORT_METHOD(getDuration:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(playLocalFile: (NSString *)path ) {
   
+  AppDelegate *appDelegate = (AppDelegate*) [[UIApplication sharedApplication] delegate];;
   NSError *error;
-  NSString *musicPath = [[self applicationDocumentsDirectory] stringByAppendingString:@"/music/"];
+  NSString *musicPath = [[appDelegate applicationDocumentsDirectory] stringByAppendingString:@"/music/"];
   NSString *audioFilePath = [musicPath stringByAppendingPathComponent:path];
   NSData* data = [NSData dataWithContentsOfFile: audioFilePath];
   _audioPlayer = [[AVAudioPlayer alloc] initWithData:data  error:&error];
@@ -235,7 +219,8 @@ RCT_EXPORT_METHOD(playLocalFile: (NSString *)path ) {
 
 RCT_EXPORT_METHOD(downloadMusicFile: (NSString *)path : (NSURL *) downloadUrl : (RCTResponseSenderBlock) callback) {
 
-    NSString *musicPath = [[self applicationDocumentsDirectory] stringByAppendingString:@"/music/"];
+    AppDelegate *appDelegate = (AppDelegate*) [[UIApplication sharedApplication] delegate];
+    NSString *musicPath = [[appDelegate applicationDocumentsDirectory] stringByAppendingString:@"/music/"];
     NSString *audioFilePath = [musicPath stringByAppendingPathComponent:path];
     NSData* data = [NSData dataWithContentsOfURL: downloadUrl];
 
@@ -252,5 +237,8 @@ RCT_EXPORT_METHOD(downloadMusicFile: (NSString *)path : (NSURL *) downloadUrl : 
 }
 
 
+RCT_EXPORT_METHOD(releaseMusicPlayer) {
+
+}
 
 @end

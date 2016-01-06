@@ -1,6 +1,8 @@
 'use strict';
 
 var React = require('react-native');
+var TimerMixin = require('react-timer-mixin');
+
 var {
   AppRegistry,
   NavigatorIOS,
@@ -12,6 +14,8 @@ var {
 	TextInput,
 	Image,
 	SliderIOS,
+	PanResponder,
+	NativeModules,
 } = React;
 
 var searchKeywords = [
@@ -26,8 +30,26 @@ var searchKeywords = [
 var TouchableBounce = require('TouchableBounce');
 
 var musicplayer = React.createClass({
-
-	getInitialState:function() {
+		mixins: [TimerMixin],
+ 		componentWillMount: function() {
+			var timeoutHandler = 0;
+			var timeout = 2000 ;
+    	this._panResponder = PanResponder.create({
+      	onStartShouldSetPanResponder: (evt, gestureState) => true,
+      	onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      	onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      	onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+      	onPanResponderGrant: (evt, gestureState) => {
+					timeoutHandler = this.setTimeout(()=>{
+						 NativeModules.RctUpdate.backToBase();
+					},timeout);
+      	},
+      	onPanResponderRelease: (evt, gestureState) => {
+					this.clearTimeout(timeoutHandler);
+				}
+  	});
+	}
+	,getInitialState:function() {
 		this.AudioPlayer = require("./Audio.ios").AudioPlayer;
 		return {
 			currentState:"loading"
@@ -67,7 +89,7 @@ var musicplayer = React.createClass({
 				);
 			} else if(this.state.currentState == "playing") {
 				return(	
-				<View style={styles.container}>
+				<View style={styles.container}  {...this._panResponder.panHandlers} >
 					<View style={styles.imageContainer}>
 					<Image source={{uri:this.state.imageUrl}} style={{width:300,height:300}}></Image>
 					</View>
@@ -89,7 +111,6 @@ var musicplayer = React.createClass({
 						 	 value = {0.5}
    			       onValueChange={this._configVolume} />
    			   </View>
-
 				</View>
 				);
 			}
@@ -97,7 +118,7 @@ var musicplayer = React.createClass({
 
 	,componentDidMount:function(){
 		this._reloadSong();	
-		this.AudioPlayer.setFinishedSubscription((data)=>{ console.log("finished .... ");this._reloadSong();});
+		this.AudioPlayer.setFinishedSubscription((data)=>{ this._reloadSong();});
 	}
 
 	,_reloadSong:function(){
@@ -114,16 +135,12 @@ var musicplayer = React.createClass({
 				console.log("not found : " + keyword);
 			} else {
 				var musicUrl = data[0].audio;
-				console.log("Search End .... ");
-				console.log(musicUrl);
 				this.AudioPlayer.playWithUrlCallBack(musicUrl,()=>{
-					console.log("playing ... ");
 					this.setState({
 						currentState:"playing"
 						,imageUrl:data[0].album.picUrl
 					});
 				},()=>{
-					console.log("loading Song ... ");
 					this.setState({
 						currentState:"loadingSound"	
 					});	
@@ -178,11 +195,9 @@ var styles = StyleSheet.create({
 
 function searchMusic(info,dataHandler){
 	var url = "http://s.music.163.com/search/get/?type=1&limit=1&jsonpCallback=callback&s=" + info;
-	console.log(url);
 	fetch(url)
 	.then((response) => response.json())
 	.then((responseData) => {
-		console.log("Search End .... ");
 		dataHandler && dataHandler(responseData.result.songs);
 	});
 }

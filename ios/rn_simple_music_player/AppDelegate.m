@@ -26,6 +26,7 @@
 
   NSURL *jsCodeLocation;
 
+//  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
  jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/loading.ios.bundle?platform=ios&dev=true"];
 //  jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"loading" withExtension:@"jsbundle"];
 
